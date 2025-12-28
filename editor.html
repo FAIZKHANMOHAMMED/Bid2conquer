@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Question Editor - Bid 2 Conquer Quiz</title>
+    <meta name="description" content="Customize quiz questions, answers, and rewards for Bid 2 Conquer Quiz">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        .editor-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .question-editor {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .question-number-badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--gradient-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .editor-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .option-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .option-input-wrapper input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .correct-label {
+            color: var(--success);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .export-section {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-top: 2rem;
+        }
+
+        .code-output {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--success);
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">💎</div>
+                <h1>Blind<span>Bid</span></h1>
+            </div>
+            <a href="index.html" class="btn btn-primary">Back to Quiz</a>
+        </header>
+
+        <div class="editor-container">
+            <div class="setup-header" style="text-align: center; margin-bottom: 2rem;">
+                <h2 class="section-title">
+                    <span class="title-icon">✏️</span>
+                    Question Editor
+                </h2>
+                <p class="section-description">Customize your quiz questions, answers, and secret rewards</p>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="addQuestion()">
+                    <span class="btn-icon">➕</span>
+                    Add Question
+                </button>
+                <button class="btn btn-success" onclick="exportQuestions()">
+                    <span class="btn-icon">📋</span>
+                    Export Code
+                </button>
+            </div>
+
+            <div class="export-section" id="exportSection" style="display: none;">
+                <h3 style="margin-top: 0;">Copy this code:</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Replace the <code>quizQuestions</code> array in script.js with this code (around line 10)
+                </p>
+                <button class="btn btn-warning" onclick="copyCode()" style="margin-bottom: 1rem;">
+                    <span class="btn-icon">📄</span>
+                    Copy to Clipboard
+                </button>
+                <div class="code-output" id="codeOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        let editorQuestions = [];
+
+        // Load existing questions or create default
+        function initEditor() {
+            if (quizQuestions && quizQuestions.length > 0) {
+                editorQuestions = JSON.parse(JSON.stringify(quizQuestions));
+            } else {
+                editorQuestions = [{
+                    question: "",
+                    options: ["", "", "", ""],
+                    correct: 0,
+                    reward: 500
+                }];
+            }
+            renderQuestions();
+        }
+
+        function addQuestion() {
+            editorQuestions.push({
+                question: "",
+                options: ["", "", "", ""],
+                correct: 0,
+                reward: 500
+            });
+            renderQuestions();
+        }
+
+        function deleteQuestion(index) {
+            if (editorQuestions.length <= 1) {
+                showToast('Cannot Delete', 'You must have at least one question', 'warning');
+                return;
+            }
+            if (confirm('Delete this question?')) {
+                editorQuestions.splice(index, 1);
+                renderQuestions();
+            }
+        }
+
+        function updateQuestion(index, field, value) {
+            editorQuestions[index][field] = value;
+        }
+
+        function updateOption(qIndex, optIndex, value) {
+            editorQuestions[qIndex].options[optIndex] = value;
+        }
+
+        function setCorrectAnswer(qIndex, optIndex) {
+            editorQuestions[qIndex].correct = optIndex;
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = editorQuestions.map((q, i) => `
+                <div class="question-editor">
+                    <span class="question-number-badge">Question ${i + 1}</span>
+                    ${editorQuestions.length > 1 ? `<button class="delete-btn" onclick="deleteQuestion(${i})">🗑️ Delete</button>` : ''}
+                    
+                    <div class="editor-grid">
+                        <div class="form-group">
+                            <label>Question Text</label>
+                            <input type="text" 
+                                   value="${q.question}" 
+                                   onchange="updateQuestion(${i}, 'question', this.value)"
+                                   placeholder="Enter your question...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Answer Options <span class="correct-label">(Select correct answer)</span></label>
+                            <div class="options-grid">
+                                ${q.options.map((opt, j) => `
+                                    <div class="option-input-wrapper">
+                                        <input type="radio" 
+                                               name="correct-${i}" 
+                                               ${q.correct === j ? 'checked' : ''}
+                                               onchange="setCorrectAnswer(${i}, ${j})"
+                                               title="Mark as correct">
+                                        <input type="text" 
+                                               value="${opt}" 
+                                               onchange="updateOption(${i}, ${j}, this.value)"
+                                               placeholder="Option ${j + 1}"
+                                               style="flex: 1;">
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Secret Reward Amount</label>
+                            <input type="number" 
+                                   value="${q.reward}" 
+                                   onchange="updateQuestion(${i}, 'reward', parseInt(this.value))"
+                                   min="0"
+                                   step="50"
+                                   placeholder="e.g., 500">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function exportQuestions() {
+            const code = `const quizQuestions = ${JSON.stringify(editorQuestions, null, 4)};`;
+            document.getElementById('codeOutput').textContent = code;
+            document.getElementById('exportSection').style.display = 'block';
+            document.getElementById('exportSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Copied!', 'Code copied to clipboard. Paste it in script.js', 'success');
+            }).catch(() => {
+                showToast('Copy Failed', 'Please manually copy the code', 'error');
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initEditor);
+    </script>
+</body>
+
+</html>

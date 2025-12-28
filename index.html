@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid 2 Conquer Quiz - Auction Your Knowledge</title>
+    <meta name="description"
+        content="A unique quiz game where participants bid to answer questions and win secret rewards">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Background Effects -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">💎</div>
+                <h1>Bid2<span>Conquer</span></h1>
+            </div>
+            <div class="header-stats" id="headerStats"></div>
+        </header>
+
+        <!-- Setup View -->
+        <section id="setupView" class="view active">
+            <div class="setup-container">
+                <div class="setup-header">
+                    <h2 class="section-title">
+                        <span class="title-icon">🎯</span>
+                        Setup Participants
+                    </h2>
+                    <p class="section-description">Add participants and set their starting purse amounts</p>
+                </div>
+
+                <!-- Global Purse Amount -->
+                <div class="purse-setup" id="purseSetup">
+                    <div class="purse-card">
+                        <h3>💰 Set Initial Purse Amount</h3>
+                        <p class="purse-description">This amount will be given to all participants</p>
+                        <div class="form-group">
+                            <input type="number" id="globalPurseAmount" placeholder="e.g., 1000" min="0" step="100"
+                                autofocus>
+                        </div>
+                        <button class="btn btn-success" onclick="setPurseAmount()">
+                            <span class="btn-icon">✓</span>
+                            Set Purse Amount
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Participant Names Form (hidden initially) -->
+                <div class="participant-form" id="participantForm" style="display: none;">
+                    <div class="purse-display">
+                        <span class="purse-label">Starting Purse for Each Participant:</span>
+                        <span class="purse-value" id="purseDisplay">$0</span>
+                        <button class="btn-link" onclick="changePurseAmount()">Change</button>
+                    </div>
+
+                    <div class="setup-form">
+                        <div class="form-group">
+                            <label for="participantName">Participant Name</label>
+                            <input type="text" id="participantName" placeholder="Enter participant name"
+                                autocomplete="off">
+                        </div>
+                        <button class="btn btn-primary" onclick="addParticipant()">
+                            <span class="btn-icon">➕</span>
+                            Add Participant
+                        </button>
+                    </div>
+                </div>
+
+                <div class="participants-list" id="participantsList"></div>
+
+                <button class="btn btn-success btn-large" id="startQuizBtn" onclick="startQuiz()" disabled>
+                    <span class="btn-icon">🚀</span>
+                    Start Quiz
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz View -->
+        <section id="quizView" class="view">
+            <div class="quiz-container">
+                <!-- Question Card (Flip Card) -->
+                <div class="flip-card" id="flipCard">
+                    <div class="flip-card-inner" id="flipCardInner">
+                        <!-- Front Side - Question -->
+                        <div class="flip-card-front">
+                            <div class="question-card">
+                                <div class="question-header">
+                                    <span class="question-number" id="questionNumber">Question 1</span>
+                                    <span class="secret-reward" id="secretRewardFront">
+                                        <span class="lock-icon">🔒</span>
+                                        Secret Reward
+                                    </span>
+                                </div>
+                                <div class="question-content">
+                                    <div class="question-icon">❓</div>
+                                    <h2 class="question-text" id="questionText"></h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Back Side - Answer & Reward -->
+                        <div class="flip-card-back">
+                            <div class="question-card result-card">
+                                <div class="question-header">
+                                    <span class="question-number" id="questionNumberBack">Question 1</span>
+                                    <span class="secret-reward" id="secretReward">
+                                        <span class="lock-icon">🔒</span>
+                                        Secret Reward
+                                    </span>
+                                </div>
+
+                                <!-- Card Body with Reveal Sections -->
+                                <div class="card-reveal-content">
+                                    <!-- Answer Reveal Section -->
+                                    <div class="reveal-box answer-box" id="answerRevealBox"
+                                        onclick="revealAnswerOnCard()">
+                                        <div class="reveal-box-locked" id="answerLocked">
+                                            <div class="reveal-box-icon">👁️</div>
+                                            <div class="reveal-box-text">Tap to Reveal Answer</div>
+                                        </div>
+                                        <div class="reveal-box-content" id="answerContent" style="display: none;">
+                                            <div class="result-icon" id="resultIcon">❓</div>
+                                            <div class="result-text" id="resultText">Checking...</div>
+                                            <div class="correct-answer" id="correctAnswerDisplay"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Reward Reveal Section -->
+                                    <div class="reveal-box reward-box" id="rewardRevealBox"
+                                        onclick="revealRewardOnCard()">
+                                        <div class="reveal-box-locked" id="rewardLocked">
+                                            <div class="reveal-box-icon">🎁</div>
+                                            <div class="reveal-box-text">Tap to Reveal Reward</div>
+                                        </div>
+                                        <div class="reveal-box-content" id="rewardContent" style="display: none;">
+                                            <div class="reward-amount-icon">💎</div>
+                                            <div class="reward-amount" id="rewardAmount">$0</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Next Question Button (shown after both reveals) -->
+                                <div class="card-continue" id="cardContinueBtn" style="display: none;">
+                                    <button class="btn btn-success btn-large" onclick="goToNextQuestion()"
+                                        id="nextQuestionCardBtn">
+                                        <span class="btn-icon">➡️</span>
+                                        Next Question
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bid Winner Entry -->
+                <div class="bid-entry-section">
+                    <h3 class="section-subtitle">
+                        <span class="icon">💰</span>
+                        Enter Bid Winner (Offline Bidding)
+                    </h3>
+
+                    <div class="bid-entry-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bidWinner">Bid Winner</label>
+                                <select id="bidWinner" onchange="updateWinnerPurse()">
+                                    <option value="">Select winner...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="winnerBidAmount">Bid Amount</label>
+                                <input type="number" id="winnerBidAmount" placeholder="Enter bid amount" min="1"
+                                    step="10">
+                            </div>
+                        </div>
+                        <div class="winner-purse" id="winnerPurse"></div>
+                    </div>
+                </div>
+
+                <!-- Answer Section -->
+                <div class="answer-section">
+                    <h3 class="section-subtitle">
+                        <span class="icon">✍️</span>
+                        Enter Answer
+                    </h3>
+                    <div class="form-group">
+                        <label for="answerInput">Winner's Answer</label>
+                        <input type="text" id="answerInput" placeholder="Type the answer here..." autocomplete="off">
+                    </div>
+                    <button class="btn btn-success btn-large" onclick="submitAnswer()" id="submitAnswerBtn">
+                        <span class="btn-icon">✓</span>
+                        Submit Answer
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard View -->
+        <section id="leaderboardView" class="view">
+            <div class="leaderboard-container">
+                <div class="leaderboard-header">
+                    <h2 class="section-title">
+                        <span class="title-icon">🏆</span>
+                        Leaderboard
+                    </h2>
+                    <div class="search-box">
+                        <input type="text" id="searchParticipant" placeholder="Search participant..."
+                            oninput="filterLeaderboard()">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Participants</span>
+                            <span class="stat-value" id="totalParticipants">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">❓</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Questions Answered</span>
+                            <span class="stat-value" id="questionsAnswered">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Rewards</span>
+                            <span class="stat-value" id="totalRewards">$0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leaderboard-table" id="leaderboardTable"></div>
+
+                <button class="btn btn-primary btn-large" onclick="nextQuestion()">
+                    <span class="btn-icon">➡️</span>
+                    Next Question
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
