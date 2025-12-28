@@ -14,61 +14,71 @@ const quizQuestions = [
         question: "What is the capital of France?",
         options: ["London", "Berlin", "Paris", "Madrid"],
         correct: 2,
-        reward: 500
+        reward: 500,
+        visible: false  // Show options on screen
     },
     {
         question: "Which planet is known as the Red Planet?",
         options: ["Venus", "Mars", "Jupiter", "Saturn"],
         correct: 1,
-        reward: 750
+        reward: 750,
+        visible: true
     },
     {
         question: "Who painted the Mona Lisa?",
         options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
         correct: 2,
-        reward: 1000
+        reward: 1000,
+        visible: false  // Don't show options - harder question
     },
     {
         question: "What is the largest ocean on Earth?",
         options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
         correct: 3,
-        reward: 600
+        reward: 600,
+        visible: true
     },
     {
         question: "In which year did World War II end?",
         options: ["1943", "1944", "1945", "1946"],
         correct: 2,
-        reward: 800
+        reward: 800,
+        visible: false  // Don't show options
     },
     {
         question: "What is the smallest prime number?",
         options: ["0", "1", "2", "3"],
         correct: 2,
-        reward: 400
+        reward: 400,
+        visible: true
     },
     {
         question: "Which element has the chemical symbol 'Au'?",
         options: ["Silver", "Gold", "Copper", "Aluminum"],
         correct: 1,
-        reward: 900
+        reward: 900,
+        visible: true
     },
     {
         question: "Who wrote 'Romeo and Juliet'?",
         options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
         correct: 1,
-        reward: 700
+        reward: 700,
+        visible: false  // Don't show options
     },
     {
         question: "What is the speed of light in vacuum?",
         options: ["299,792 km/s", "150,000 km/s", "450,000 km/s", "500,000 km/s"],
         correct: 0,
-        reward: 1200
+        reward: 1200,
+        visible: true
     },
     {
         question: "Which country is home to the kangaroo?",
         options: ["New Zealand", "South Africa", "Australia", "Brazil"],
         correct: 2,
-        reward: 550
+        reward: 550,
+        visible: true
     }
 ];
 
@@ -113,7 +123,7 @@ function getInitials(name) {
 }
 
 function formatCurrency(amount) {
-    return `$${amount.toLocaleString()}`;
+    return `Rs.${amount.toLocaleString('en-IN')}`;
 }
 
 // ==================== Purse Amount Setup ====================
@@ -287,6 +297,27 @@ function loadQuestion() {
 
     // Hide continue button on card
     document.getElementById('cardContinueBtn').style.display = 'none';
+
+    // Display options based on visible property
+    const optionsGrid = document.getElementById('optionsGrid');
+    const noHints = document.getElementById('noHints');
+
+    if (question.visible) {
+        // Show options
+        const letters = ['A', 'B', 'C', 'D'];
+        optionsGrid.innerHTML = question.options.map((option, index) => `
+            <div class="option-item">
+                <span class="option-letter">${letters[index]}</span>
+                <span class="option-text">${option}</span>
+            </div>
+        `).join('');
+        optionsGrid.style.display = 'grid';
+        noHints.style.display = 'none';
+    } else {
+        // Hide options, show "no hints" message
+        optionsGrid.style.display = 'none';
+        noHints.style.display = 'flex';
+    }
 
     // Populate bid winner select
     const winnerSelect = document.getElementById('bidWinner');
