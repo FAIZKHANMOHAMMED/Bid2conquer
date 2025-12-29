@@ -517,6 +517,106 @@ body {
     }
 }
 
+/* ==================== Option Answer Buttons ==================== */
+.option-answer-input {
+    margin-bottom: var(--spacing-md);
+}
+
+.option-select-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.option-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.option-btn {
+    background: rgba(30, 41, 59, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-btn:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+}
+
+.option-btn.selected {
+    background: var(--gradient-primary);
+    border-color: var(--primary);
+    box-shadow: 0 5px 25px rgba(99, 102, 241, 0.4);
+    transform: scale(1.05);
+}
+
+.option-btn.selected .option-btn-letter {
+    color: white;
+}
+
+.option-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.option-btn-letter {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.selected-option-display {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    transition: all var(--transition-base);
+}
+
+.selected-option-display strong {
+    color: var(--primary-light);
+}
+
+@media (max-width: 480px) {
+    .option-buttons-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .option-btn {
+        padding: var(--spacing-sm);
+    }
+
+    .option-btn-letter {
+        font-size: 1.2rem;
+    }
+}
+
+/* Text Answer Input Container */
+.text-answer-input {
+    margin-bottom: var(--spacing-md);
+}
+
 /* ==================== Participants List ==================== */
 .participants-list {
     display: grid;

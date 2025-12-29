@@ -157,7 +157,7 @@
                                             <div class="reveal-box-text">Tap to Reveal Reward</div>
                                         </div>
                                         <div class="reveal-box-content" id="rewardContent" style="display: none;">
-                                            <div class="reward-amount-icon">💎</div>
+                                            <div class="reward-amount-icon">🪙</div>
                                             <div class="reward-amount" id="rewardAmount">$0</div>
                                         </div>
                                     </div>
@@ -207,10 +207,38 @@
                         <span class="icon">✍️</span>
                         Enter Answer
                     </h3>
-                    <div class="form-group">
-                        <label for="answerInput">Winner's Answer</label>
-                        <input type="text" id="answerInput" placeholder="Type the answer here..." autocomplete="off">
+
+                    <!-- Text Input for Non-Visible Options -->
+                    <div class="text-answer-input" id="textAnswerInput">
+                        <div class="form-group">
+                            <label for="answerInput">Winner's Answer</label>
+                            <input type="text" id="answerInput" placeholder="Type the answer here..."
+                                autocomplete="off">
+                        </div>
                     </div>
+
+                    <!-- Option Buttons for Visible Options -->
+                    <div class="option-answer-input" id="optionAnswerInput" style="display: none;">
+                        <label class="option-select-label">Select Answer Option</label>
+                        <div class="option-buttons-grid">
+                            <button class="option-btn" data-option="A" onclick="selectOptionAnswer('A')">
+                                <span class="option-btn-letter">A</span>
+                            </button>
+                            <button class="option-btn" data-option="B" onclick="selectOptionAnswer('B')">
+                                <span class="option-btn-letter">B</span>
+                            </button>
+                            <button class="option-btn" data-option="C" onclick="selectOptionAnswer('C')">
+                                <span class="option-btn-letter">C</span>
+                            </button>
+                            <button class="option-btn" data-option="D" onclick="selectOptionAnswer('D')">
+                                <span class="option-btn-letter">D</span>
+                            </button>
+                        </div>
+                        <div class="selected-option-display" id="selectedOptionDisplay">
+                            No option selected
+                        </div>
+                    </div>
+
                     <div class="answer-buttons">
                         <button class="btn btn-success btn-large" onclick="submitAnswer()" id="submitAnswerBtn">
                             <span class="btn-icon">✓</span>
@@ -256,7 +284,7 @@
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">💎</div>
+                        <div class="stat-icon">🪙</div>
                         <div class="stat-info">
                             <span class="stat-label">Total Rewards</span>
                             <span class="stat-value" id="totalRewards">$0</span>

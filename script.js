@@ -4,9 +4,128 @@ let currentQuestionIndex = 0;
 let bidWinner = null;
 let bidAmount = 0;
 let selectedAnswer = null;
+let selectedOptionAnswer = null;  // For visible option questions (A, B, C, D)
 let totalQuestionsAnswered = 0;
 let globalPurseAmount = 0;
 let rewardRevealed = false;
+let currentView = 'setupView';  // Track current view for navigation
+
+// ==================== Local Storage Functions ====================
+const STORAGE_KEY = 'bid2conquer_gamestate';
+
+function saveGameState() {
+    const gameState = {
+        participants: participants,
+        currentQuestionIndex: currentQuestionIndex,
+        totalQuestionsAnswered: totalQuestionsAnswered,
+        globalPurseAmount: globalPurseAmount,
+        currentView: currentView,
+        timestamp: Date.now()
+    };
+
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
+        console.log('Game state saved:', gameState);
+    } catch (e) {
+        console.error('Failed to save game state:', e);
+    }
+}
+
+function loadGameState() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const gameState = JSON.parse(saved);
+
+            // Check if saved state is less than 24 hours old
+            const hoursSinceSave = (Date.now() - gameState.timestamp) / (1000 * 60 * 60);
+            if (hoursSinceSave > 24) {
+                clearGameState();
+                return null;
+            }
+
+            return gameState;
+        }
+    } catch (e) {
+        console.error('Failed to load game state:', e);
+    }
+    return null;
+}
+
+function clearGameState() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+        console.log('Game state cleared');
+    } catch (e) {
+        console.error('Failed to clear game state:', e);
+    }
+}
+
+function restoreGameState(gameState) {
+    if (!gameState) return false;
+
+    participants = gameState.participants || [];
+    currentQuestionIndex = gameState.currentQuestionIndex || 0;
+    totalQuestionsAnswered = gameState.totalQuestionsAnswered || 0;
+    globalPurseAmount = gameState.globalPurseAmount || 0;
+    currentView = gameState.currentView || 'setupView';
+
+    return true;
+}
+
+// ==================== Browser History Navigation ====================
+function pushHistoryState(viewId, title = 'Bid2Conquer') {
+    const stateData = { view: viewId };
+    history.pushState(stateData, title, `#${viewId}`);
+    currentView = viewId;
+    saveGameState();
+}
+
+function handlePopState(event) {
+    if (event.state && event.state.view) {
+        navigateToView(event.state.view, false);
+    } else {
+        // No state, check hash or go to setup
+        const hash = window.location.hash.replace('#', '');
+        if (hash && document.getElementById(hash)) {
+            navigateToView(hash, false);
+        } else {
+            navigateToView('setupView', false);
+        }
+    }
+}
+
+function navigateToView(viewId, addToHistory = true) {
+    // Handle navigation logic based on current and target view
+    currentView = viewId;
+
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    document.getElementById(viewId).classList.add('active');
+
+    if (addToHistory) {
+        pushHistoryState(viewId);
+    }
+
+    // Update UI based on view
+    if (viewId === 'setupView') {
+        renderParticipantsList();
+        updateStartButton();
+
+        if (globalPurseAmount > 0) {
+            document.getElementById('purseSetup').style.display = 'none';
+            document.getElementById('participantForm').style.display = 'block';
+            document.getElementById('purseDisplay').textContent = formatCurrency(globalPurseAmount);
+        }
+    } else if (viewId === 'quizView') {
+        loadQuestion();
+    } else if (viewId === 'leaderboardView') {
+        updateLeaderboard();
+    }
+
+    saveGameState();
+}
 
 // Sample quiz questions with secret rewards
 const quizQuestions = [
@@ -111,11 +230,18 @@ function showToast(title, message, type = 'info') {
     }, 3000);
 }
 
-function switchView(viewId) {
+function switchView(viewId, addToHistory = true) {
     document.querySelectorAll('.view').forEach(view => {
         view.classList.remove('active');
     });
     document.getElementById(viewId).classList.add('active');
+    currentView = viewId;
+
+    if (addToHistory) {
+        pushHistoryState(viewId);
+    }
+
+    saveGameState();
 }
 
 function getInitials(name) {
@@ -147,6 +273,7 @@ function setPurseAmount() {
     document.getElementById('participantName').focus();
 
     showToast('Purse Set!', `All participants will start with ${formatCurrency(purse)}`, 'success');
+    saveGameState();
 }
 
 function changePurseAmount() {
@@ -164,6 +291,7 @@ function changePurseAmount() {
     document.getElementById('participantForm').style.display = 'none';
     document.getElementById('globalPurseAmount').value = '';
     document.getElementById('globalPurseAmount').focus();
+    saveGameState();
 }
 
 // ==================== Participant Management ====================
@@ -197,6 +325,7 @@ function addParticipant() {
     renderParticipantsList();
     updateStartButton();
     showToast('Success', `${name} added successfully!`, 'success');
+    saveGameState();
 }
 
 function removeParticipant(id) {
@@ -206,6 +335,7 @@ function removeParticipant(id) {
     renderParticipantsList();
     updateStartButton();
     showToast('Removed', `${participant.name} has been removed`, 'info');
+    saveGameState();
 }
 
 function renderParticipantsList() {
@@ -302,8 +432,12 @@ function loadQuestion() {
     const optionsGrid = document.getElementById('optionsGrid');
     const noHints = document.getElementById('noHints');
 
+    // Get answer input containers
+    const textAnswerInput = document.getElementById('textAnswerInput');
+    const optionAnswerInput = document.getElementById('optionAnswerInput');
+
     if (question.visible) {
-        // Show options
+        // Show options on card
         const letters = ['A', 'B', 'C', 'D'];
         optionsGrid.innerHTML = question.options.map((option, index) => `
             <div class="option-item">
@@ -313,10 +447,21 @@ function loadQuestion() {
         `).join('');
         optionsGrid.style.display = 'grid';
         noHints.style.display = 'none';
+
+        // Show option buttons for answer, hide text input
+        textAnswerInput.style.display = 'none';
+        optionAnswerInput.style.display = 'block';
+
+        // Reset option buttons
+        resetOptionButtons();
     } else {
         // Hide options, show "no hints" message
         optionsGrid.style.display = 'none';
         noHints.style.display = 'flex';
+
+        // Show text input for answer, hide option buttons
+        textAnswerInput.style.display = 'block';
+        optionAnswerInput.style.display = 'none';
     }
 
     // Populate bid winner select
@@ -330,11 +475,42 @@ function loadQuestion() {
     bidWinner = null;
     bidAmount = 0;
     selectedAnswer = null;
+    selectedOptionAnswer = null;
     rewardRevealed = false;
     answerRevealed = false;
     document.getElementById('answerInput').value = '';
     document.getElementById('winnerBidAmount').value = '';
     document.getElementById('winnerPurse').innerHTML = '';
+}
+
+// ==================== Option Answer Selection ====================
+function selectOptionAnswer(option) {
+    selectedOptionAnswer = option;
+
+    // Update button styles
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.dataset.option === option) {
+            btn.classList.add('selected');
+        }
+    });
+
+    // Update display
+    const question = quizQuestions[currentQuestionIndex];
+    const optionIndex = ['A', 'B', 'C', 'D'].indexOf(option);
+    const optionText = question.options[optionIndex];
+    document.getElementById('selectedOptionDisplay').innerHTML =
+        `Selected: <strong>${option}</strong> - ${optionText}`;
+
+    showToast('Option Selected', `You selected option ${option}`, 'info');
+}
+
+function resetOptionButtons() {
+    selectedOptionAnswer = null;
+    const buttons = document.querySelectorAll('.option-btn');
+    buttons.forEach(btn => btn.classList.remove('selected'));
+    document.getElementById('selectedOptionDisplay').innerHTML = 'No option selected';
 }
 
 function updateWinnerPurse() {
@@ -373,20 +549,36 @@ function submitAnswer() {
         return;
     }
 
-    // Get and validate answer
-    const answerInput = document.getElementById('answerInput');
-    const userAnswer = answerInput.value.trim();
+    // Get and validate answer based on question type
+    const question = quizQuestions[currentQuestionIndex];
 
-    if (!userAnswer) {
-        showToast('No Answer', 'Please enter an answer', 'warning');
-        return;
+    if (question.visible) {
+        // Visible options - validate option selection
+        if (!selectedOptionAnswer) {
+            showToast('No Option Selected', 'Please select an answer option (A, B, C, or D)', 'warning');
+            return;
+        }
+    } else {
+        // Non-visible options - validate text input
+        const answerInput = document.getElementById('answerInput');
+        const userAnswer = answerInput.value.trim();
+
+        if (!userAnswer) {
+            showToast('No Answer', 'Please enter an answer', 'warning');
+            return;
+        }
     }
 
     // Disable further interactions
     document.getElementById('answerInput').disabled = true;
     document.getElementById('submitAnswerBtn').style.display = 'none';
+    document.getElementById('skipQuestionBtn').style.display = 'none';
     document.getElementById('bidWinner').disabled = true;
     document.getElementById('winnerBidAmount').disabled = true;
+
+    // Disable option buttons
+    const optionBtns = document.querySelectorAll('.option-btn');
+    optionBtns.forEach(btn => btn.disabled = true);
 
     // Reset reveal states
     answerRevealed = false;
@@ -441,11 +633,21 @@ function revealAnswerOnCard() {
 
     const question = quizQuestions[currentQuestionIndex];
     const correctAnswer = question.options[question.correct];
-    const answerInput = document.getElementById('answerInput');
-    const userAnswer = answerInput.value.trim();
+    const correctLetter = ['A', 'B', 'C', 'D'][question.correct];
+    let isCorrect = false;
+    let userAnswerDisplay = '';
 
-    // Check if answer is correct (case-insensitive)
-    const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+    if (question.visible) {
+        // Check option selection
+        isCorrect = selectedOptionAnswer === correctLetter;
+        userAnswerDisplay = selectedOptionAnswer ? `Option ${selectedOptionAnswer}` : 'None';
+    } else {
+        // Check text input
+        const answerInput = document.getElementById('answerInput');
+        const userAnswer = answerInput.value.trim();
+        isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+        userAnswerDisplay = userAnswer;
+    }
 
     // Hide the locked state, show the content
     document.getElementById('answerLocked').style.display = 'none';
@@ -519,11 +721,18 @@ function checkBothRevealed() {
 function goToNextQuestion() {
     const question = quizQuestions[currentQuestionIndex];
     const correctAnswer = question.options[question.correct];
-    const answerInput = document.getElementById('answerInput');
-    const userAnswer = answerInput.value.trim();
+    const correctLetter = ['A', 'B', 'C', 'D'][question.correct];
+    let isCorrect = false;
 
-    // Check if answer is correct (case-insensitive)
-    const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+    if (question.visible) {
+        // Check option selection
+        isCorrect = selectedOptionAnswer === correctLetter;
+    } else {
+        // Check text input
+        const answerInput = document.getElementById('answerInput');
+        const userAnswer = answerInput.value.trim();
+        isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+    }
 
     // Deduct bid from participant's purse
     bidWinner.purse -= bidAmount;
@@ -546,6 +755,11 @@ function goToNextQuestion() {
     document.getElementById('winnerBidAmount').disabled = false;
     document.getElementById('answerInput').disabled = false;
     document.getElementById('submitAnswerBtn').style.display = 'flex';
+    document.getElementById('skipQuestionBtn').style.display = 'flex';
+
+    // Re-enable option buttons
+    const optionBtns = document.querySelectorAll('.option-btn');
+    optionBtns.forEach(btn => btn.disabled = false);
 
     // Reset reveal states
     answerRevealed = false;
@@ -554,6 +768,7 @@ function goToNextQuestion() {
     // Show leaderboard after every question
     switchView('leaderboardView');
     updateLeaderboard();
+    saveGameState();
 }
 
 function nextQuestion() {
@@ -566,6 +781,11 @@ function nextQuestion() {
 
     // Reset button states
     document.getElementById('submitAnswerBtn').style.display = 'flex';
+    document.getElementById('skipQuestionBtn').style.display = 'flex';
+
+    // Re-enable option buttons
+    const optionBtns = document.querySelectorAll('.option-btn');
+    optionBtns.forEach(btn => btn.disabled = false);
 
     // Reset reveal states
     answerRevealed = false;
@@ -597,6 +817,10 @@ function restartQuiz() {
         totalQuestionsAnswered = 0;
         participants = [];
         globalPurseAmount = 0;
+
+        // Clear saved game state
+        clearGameState();
+
         switchView('setupView');
         renderParticipantsList();
         updateStartButton();
@@ -699,7 +923,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initialize
-    renderParticipantsList();
-    updateStartButton();
+    // Set up browser back/forward button handler
+    window.addEventListener('popstate', handlePopState);
+
+    // Try to restore saved game state
+    const savedState = loadGameState();
+    if (savedState && restoreGameState(savedState)) {
+        // Restore the UI based on saved state
+        renderParticipantsList();
+        updateStartButton();
+
+        // Restore purse amount display
+        if (globalPurseAmount > 0) {
+            document.getElementById('purseSetup').style.display = 'none';
+            document.getElementById('participantForm').style.display = 'block';
+            document.getElementById('purseDisplay').textContent = formatCurrency(globalPurseAmount);
+        }
+
+        // Navigate to the saved view
+        switchView(currentView, false);
+
+        // Set initial history state
+        history.replaceState({ view: currentView }, 'Bid2Conquer', `#${currentView}`);
+
+        showToast('Progress Restored! 📂', 'Your previous session has been loaded', 'success');
+    } else {
+        // Fresh start
+        renderParticipantsList();
+        updateStartButton();
+
+        // Set initial history state
+        history.replaceState({ view: 'setupView' }, 'Bid2Conquer', '#setupView');
+    }
 });
