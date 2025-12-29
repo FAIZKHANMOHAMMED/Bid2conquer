@@ -211,10 +211,16 @@
                         <label for="answerInput">Winner's Answer</label>
                         <input type="text" id="answerInput" placeholder="Type the answer here..." autocomplete="off">
                     </div>
-                    <button class="btn btn-success btn-large" onclick="submitAnswer()" id="submitAnswerBtn">
-                        <span class="btn-icon">✓</span>
-                        Submit Answer
-                    </button>
+                    <div class="answer-buttons">
+                        <button class="btn btn-success btn-large" onclick="submitAnswer()" id="submitAnswerBtn">
+                            <span class="btn-icon">✓</span>
+                            Submit Answer
+                        </button>
+                        <button class="btn btn-warning btn-skip" onclick="skipQuestion()" id="skipQuestionBtn">
+                            <span class="btn-icon">⏭️</span>
+                            Skip Question
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>

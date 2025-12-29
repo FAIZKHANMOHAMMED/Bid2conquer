@@ -398,6 +398,41 @@ function submitAnswer() {
     showToast('Answer Submitted!', 'Tap the boxes on the card to reveal', 'info');
 }
 
+function skipQuestion() {
+    // Confirm skip action
+    if (!confirm('Are you sure you want to skip this question? No bid will be placed.')) {
+        return;
+    }
+
+    const question = quizQuestions[currentQuestionIndex];
+
+    // Show toast notification
+    showToast('Question Skipped! ⏭️', `Skipped: "${question.question.substring(0, 50)}..."`, 'warning');
+
+    // Increment question index
+    currentQuestionIndex++;
+
+    // Reset controls for next question
+    document.getElementById('bidWinner').disabled = false;
+    document.getElementById('winnerBidAmount').disabled = false;
+    document.getElementById('answerInput').disabled = false;
+    document.getElementById('submitAnswerBtn').style.display = 'flex';
+    document.getElementById('skipQuestionBtn').style.display = 'flex';
+
+    // Reset reveal states
+    answerRevealed = false;
+    rewardRevealed = false;
+
+    // Check if there are more questions
+    if (currentQuestionIndex >= quizQuestions.length) {
+        endQuiz();
+        return;
+    }
+
+    // Load the next question
+    loadQuestion();
+}
+
 // Track if answer has been revealed for this question
 let answerRevealed = false;
 
