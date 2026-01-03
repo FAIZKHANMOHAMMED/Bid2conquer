@@ -129,76 +129,88 @@ function navigateToView(viewId, addToHistory = true) {
 
 // Sample quiz questions with secret rewards
 const quizQuestions = [
+     {
+        question: "Amazon was first started as an online bookstore?",
+        options: ["True", "False"],
+        correct: 0,
+        reward: 80,
+        visible: true  // Don't show options - harder question
+    },
     {
-        question: "What is the capital of France?",
-        options: ["London", "Berlin", "Paris", "Madrid"],
+        question: "Which company is known for its 'Just Do It' slogan?",
+        options: ["Adidas", "Puma", "Nike", "Reebok"],
         correct: 2,
-        reward: 500,
+        reward: 0,
+        visible: false
+    },
+   
+    {
+        question: "An electric train is moving north at 100 km/h. The wind is blowing west at 10 km/h. Which way does the smoke blow??",
+        options: ["North", "South", "East", "There is no smoke"],
+        correct: 3,
+        reward: 20,
+        visible: true
+    },
+    {
+        question: "Full form of MVP?",
+        options: ["Most Valuable Player", "Minimum Viable Product", "Maximum Value Proposition", "Multi Variable Process"],
+        correct: 1,
+        reward: 50,
+        visible: false  // Don't show options
+    },
+    {
+        question: "YouTube was originally a dating website idea?",
+        options: ["True", "False"],
+        correct: 0,
+        reward: 40,
+        visible: true
+    },
+    {
+        question: "What is something everyone agrees with but nobody reads??",
+        options: ["Terms and Conditions", "Privacy Policy", "User Manual", "FAQs"],
+        correct: 0,
+        reward: 100,
+        visible: false
+    },
+    {
+        question: "Which company uses the tagline: “Think different”?",
+        options: ["Apple", "Google", "Microsoft", "Amazon"],
+        correct: 0,
+        reward: 0,
         visible: false  // Show options on screen
     },
     {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Venus", "Mars", "Jupiter", "Saturn"],
+        question: "If you have a bowl with six apples and you take away four, how many do you have?",
+        options: ["2", "4", "6", "None"],
         correct: 1,
-        reward: 750,
-        visible: true
+        reward: 90,
+        visible: true  // Don't show options
     },
     {
-        question: "Who painted the Mona Lisa?",
-        options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
-        correct: 2,
-        reward: 1000,
-        visible: false  // Don't show options - harder question
-    },
-    {
-        question: "What is the largest ocean on Earth?",
-        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
-        correct: 3,
-        reward: 600,
-        visible: true
-    },
-    {
-        question: "In which year did World War II end?",
-        options: ["1943", "1944", "1945", "1946"],
-        correct: 2,
-        reward: 800,
-        visible: false  // Don't show options
-    },
-    {
-        question: "What is the smallest prime number?",
-        options: ["0", "1", "2", "3"],
-        correct: 2,
-        reward: 400,
-        visible: true
-    },
-    {
-        question: "Which element has the chemical symbol 'Au'?",
-        options: ["Silver", "Gold", "Copper", "Aluminum"],
+        question: "Which company owns the game Free Fire?",
+        options: ["Tencent", "Garena", "Activision", "Electronic Arts"],
         correct: 1,
-        reward: 900,
-        visible: true
+        reward: 110,
+        visible: false
     },
     {
-        question: "Who wrote 'Romeo and Juliet'?",
-        options: ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+        question: "Which company owns Snapchat?",
+        options: ["Meta", "Snap Inc.", "Google", "Apple"],
         correct: 1,
-        reward: 700,
-        visible: false  // Don't show options
+        reward: 70,
+        visible: false
     },
+     
+    
     {
-        question: "What is the speed of light in vacuum?",
-        options: ["299,792 km/s", "150,000 km/s", "450,000 km/s", "500,000 km/s"],
-        correct: 0,
-        reward: 1200,
-        visible: true
-    },
-    {
-        question: "Which country is home to the kangaroo?",
-        options: ["New Zealand", "South Africa", "Australia", "Brazil"],
+        question: "From selling pickles and books by train To building hotels again and again?",
+        options: ["Taj Hotels","ITC Hotels", "OYO Rooms", "The Leela Palaces"],
         correct: 2,
-        reward: 550,
-        visible: true
-    }
+        reward: 40,
+        visible: false
+    },
+   
+
 ];
 
 // ==================== Utility Functions ====================
