@@ -9,6 +9,7 @@ let totalQuestionsAnswered = 0;
 let globalPurseAmount = 0;
 let rewardRevealed = false;
 let currentView = 'setupView';  // Track current view for navigation
+let cardFlipped = false;
 
 // ==================== Local Storage Functions ====================
 const STORAGE_KEY = 'bid2conquer_gamestate';
@@ -129,86 +130,289 @@ function navigateToView(viewId, addToHistory = true) {
 
 // Sample quiz questions with secret rewards
 const quizQuestions = [
-     {
-        question: "Amazon was first started as an online bookstore?",
-        options: ["True", "False"],
+
+  {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
         correct: 0,
         reward: 80,
-        visible: true  // Don't show options - harder question
+        visible: false // Don't show options - harder question
     },
-    {
-        question: "Which company is known for its 'Just Do It' slogan?",
-        options: ["Adidas", "Puma", "Nike", "Reebok"],
-        correct: 2,
-        reward: 0,
-        visible: false
-    },
-   
-    {
-        question: "An electric train is moving north at 100 km/h. The wind is blowing west at 10 km/h. Which way does the smoke blow??",
-        options: ["North", "South", "East", "There is no smoke"],
-        correct: 3,
-        reward: 20,
-        visible: true
-    },
-    {
-        question: "Full form of MVP?",
-        options: ["Most Valuable Player", "Minimum Viable Product", "Maximum Value Proposition", "Multi Variable Process"],
-        correct: 1,
-        reward: 50,
-        visible: false  // Don't show options
-    },
-    {
-        question: "YouTube was originally a dating website idea?",
-        options: ["True", "False"],
+{
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
         correct: 0,
-        reward: 40,
-        visible: true
-    },
-    {
-        question: "What is something everyone agrees with but nobody reads??",
-        options: ["Terms and Conditions", "Privacy Policy", "User Manual", "FAQs"],
-        correct: 0,
-        reward: 100,
-        visible: false
-    },
-    {
-        question: "Which company uses the tagline: “Think different”?",
-        options: ["Apple", "Google", "Microsoft", "Amazon"],
-        correct: 0,
-        reward: 0,
-        visible: false  // Show options on screen
-    },
-    {
-        question: "If you have a bowl with six apples and you take away four, how many do you have?",
-        options: ["2", "4", "6", "None"],
-        correct: 1,
-        reward: 90,
-        visible: true  // Don't show options
-    },
-    {
-        question: "Which company owns the game Free Fire?",
-        options: ["Tencent", "Garena", "Activision", "Electronic Arts"],
-        correct: 1,
-        reward: 110,
-        visible: false
-    },
-    {
-        question: "Which company owns Snapchat?",
-        options: ["Meta", "Snap Inc.", "Google", "Apple"],
-        correct: 1,
         reward: 70,
-        visible: false
+        visible: false // Don't show options - harder question
     },
+    {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 0,
+        visible: false // Don't show options - harder question
+    },
+    {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+    {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+    {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+      {
+        question: "1.Sample: Which car brand features a logo with a three-pointed star inside a circle??",
+        options: ["Mercedes Benz", "False"],
+        correct: 0,
+        reward: 80,
+        visible: false // Don't show options - harder question
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // {
+    //     question: "2.Which company is known for its 'Just Do It' slogan?",
+    //     options: ["Adidas", "Puma", "Nike", "Reebok"],
+    //     correct: 2,
+    //     reward: 0,
+    //     visible: false
+    // },
+   
+    // {
+    //     question: "3.An electric train is moving north at 100 km/h. The wind is blowing west at 10 km/h. Which way does the smoke blow??",
+    //     options: ["North", "South", "East", "There is no smoke"],
+    //     correct: 3,
+    //     reward: 20,
+    //     visible: false
+    // },
+    // {
+    //     question: "4.Full form of MVP?",
+    //     options: ["Most Valuable Player", "Minimum Viable Product", "Maximum Value Proposition", "Multi Variable Process"],
+    //     correct: 1,
+    //     reward: 50,
+    //     visible: false  // Don't show options
+    // },
+    // {
+    //     question: "5.YouTube was originally a dating website idea?",
+    //     options: ["True", "False"],
+    //     correct: 0,
+    //     reward: 40,
+    //     visible: false
+    // },
+    // {
+    //     question: "6.What is something everyone agrees with but nobody reads??",
+    //     options: ["Terms and Conditions", "Privacy Policy", "User Manual", "FAQs"],
+    //     correct: 0,
+    //     reward: 100,
+    //     visible: false
+    // },
+    // {
+    //     question: "7.Which company uses the tagline: “Think different”?",
+    //     options: ["Apple", "Google", "Microsoft", "Amazon"],
+    //     correct: 0,
+    //     reward: 0,
+    //     visible: false  // Show options on screen
+    // },
+    // {
+    //     question: "8.If you have a bowl with six apples and you take away four, how many do you have?",
+    //     options: ["2", "4", "6", "None"],
+    //     correct: 1,
+    //     reward: 90,
+    //     visible: false // Don't show options
+    // },
+    // {
+    //     question: "9.Which company owns the game Free Fire?",
+    //     options: ["Tencent", "Garena", "Activision", "Electronic Arts"],
+    //     correct: 1,
+    //     reward: 110,
+    //     visible: false
+    // },
+    // {
+    //     question: "10.Which company owns Snapchat?",
+    //     options: ["Meta", "Snap Inc.", "Google", "Apple"],
+    //     correct: 1,
+    //     reward: 70,
+    //     visible: false
+    // },
      
     
-    {
-        question: "From selling pickles and books by train To building hotels again and again?",
-        options: ["Taj Hotels","ITC Hotels", "OYO Rooms", "The Leela Palaces"],
-        correct: 2,
-        reward: 40,
-        visible: false
-    },
+    // {
+    //     question: "11.From selling pickles and books by train To building hotels again and again?",
+    //     options: ["Taj Hotels","ITC Hotels", "OYO Rooms", "The Leela Palaces"],
+    //     correct: 2,
+    //     reward: 40,
+    //     visible: false
+    // },
+    //  {
+    //     question: "12.Guess the product that tagline belongs to: 'THE MINT WITH THE HOLE'?",
+    //     options: ["polo","Happydent", "Center Fresh", "Big Babol"],
+    //     correct: 0,
+    //     reward: 40,
+    //     visible: false
+    // },
    
 
 ];
@@ -444,10 +648,7 @@ function loadQuestion() {
     const optionsGrid = document.getElementById('optionsGrid');
     const noHints = document.getElementById('noHints');
 
-    // Get answer input containers
-    const textAnswerInput = document.getElementById('textAnswerInput');
-    const optionAnswerInput = document.getElementById('optionAnswerInput');
-
+    // Handle options display on the front of the card
     if (question.visible) {
         // Show options on card
         const letters = ['A', 'B', 'C', 'D'];
@@ -460,20 +661,25 @@ function loadQuestion() {
         optionsGrid.style.display = 'grid';
         noHints.style.display = 'none';
 
-        // Show option buttons for answer, hide text input
-        textAnswerInput.style.display = 'none';
-        optionAnswerInput.style.display = 'block';
-
-        // Reset option buttons
-        resetOptionButtons();
+        // Option buttons for entering answers were removed in the new flow
+        // (Options are shown on the front card for reference only)
     } else {
         // Hide options, show "no hints" message
         optionsGrid.style.display = 'none';
         noHints.style.display = 'flex';
 
-        // Show text input for answer, hide option buttons
-        textAnswerInput.style.display = 'block';
-        optionAnswerInput.style.display = 'none';
+    }
+
+    // Hide reward entry row until reward is revealed
+    const rewardRow = document.getElementById('rewardEntryRow');
+    if (rewardRow) rewardRow.style.display = 'none';
+
+    // Reset flip state for this question
+    cardFlipped = false;
+    const front = document.querySelector('#flipCard .flip-card-front');
+    if (front) {
+        front.style.cursor = 'pointer';
+        front.onclick = () => { if (!cardFlipped) flipCardFrontClicked(); };
     }
 
     // Populate bid winner select
@@ -490,7 +696,8 @@ function loadQuestion() {
     selectedOptionAnswer = null;
     rewardRevealed = false;
     answerRevealed = false;
-    document.getElementById('answerInput').value = '';
+    const rewardGiven = document.getElementById('rewardGivenAmount');
+    if (rewardGiven) rewardGiven.value = '';
     document.getElementById('winnerBidAmount').value = '';
     document.getElementById('winnerPurse').innerHTML = '';
 }
@@ -541,65 +748,7 @@ function updateWinnerPurse() {
 }
 
 function submitAnswer() {
-    // Validate bid winner
-    if (!bidWinner) {
-        showToast('No Winner', 'Please select the bid winner', 'error');
-        return;
-    }
-
-    // Get and validate bid amount
-    const bidAmountInput = document.getElementById('winnerBidAmount');
-    bidAmount = parseInt(bidAmountInput.value);
-
-    if (!bidAmount || bidAmount <= 0) {
-        showToast('Invalid Bid', 'Please enter a valid bid amount', 'error');
-        return;
-    }
-
-    if (bidAmount > bidWinner.purse) {
-        showToast('Insufficient Funds', `${bidWinner.name} only has ${formatCurrency(bidWinner.purse)}`, 'error');
-        return;
-    }
-
-    // Get and validate answer based on question type
-    const question = quizQuestions[currentQuestionIndex];
-
-    if (question.visible) {
-        // Visible options - validate option selection
-        if (!selectedOptionAnswer) {
-            showToast('No Option Selected', 'Please select an answer option (A, B, C, or D)', 'warning');
-            return;
-        }
-    } else {
-        // Non-visible options - validate text input
-        const answerInput = document.getElementById('answerInput');
-        const userAnswer = answerInput.value.trim();
-
-        if (!userAnswer) {
-            showToast('No Answer', 'Please enter an answer', 'warning');
-            return;
-        }
-    }
-
-    // Disable further interactions
-    document.getElementById('answerInput').disabled = true;
-    document.getElementById('submitAnswerBtn').style.display = 'none';
-    document.getElementById('skipQuestionBtn').style.display = 'none';
-    document.getElementById('bidWinner').disabled = true;
-    document.getElementById('winnerBidAmount').disabled = true;
-
-    // Disable option buttons
-    const optionBtns = document.querySelectorAll('.option-btn');
-    optionBtns.forEach(btn => btn.disabled = true);
-
-    // Reset reveal states
-    answerRevealed = false;
-    rewardRevealed = false;
-
-    // Flip the card to show the reveal boxes
-    document.getElementById('flipCard').classList.add('flipped');
-
-    showToast('Answer Submitted!', 'Tap the boxes on the card to reveal', 'info');
+    // (OLD) submitAnswer removed. Use submitResult() after reveal to apply bid and reward.
 }
 
 function skipQuestion() {
@@ -619,9 +768,7 @@ function skipQuestion() {
     // Reset controls for next question
     document.getElementById('bidWinner').disabled = false;
     document.getElementById('winnerBidAmount').disabled = false;
-    document.getElementById('answerInput').disabled = false;
-    document.getElementById('submitAnswerBtn').style.display = 'flex';
-    document.getElementById('skipQuestionBtn').style.display = 'flex';
+    // answer input and submit buttons were removed in new flow
 
     // Reset reveal states
     answerRevealed = false;
@@ -640,57 +787,44 @@ function skipQuestion() {
 // Track if answer has been revealed for this question
 let answerRevealed = false;
 
+function flipCardFrontClicked() {
+    if (cardFlipped) return;
+    document.getElementById('flipCard').classList.add('flipped');
+    cardFlipped = true;
+}
+
 function revealAnswerOnCard() {
     if (answerRevealed) return;
 
     const question = quizQuestions[currentQuestionIndex];
     const correctAnswer = question.options[question.correct];
-    const correctLetter = ['A', 'B', 'C', 'D'][question.correct];
-    let isCorrect = false;
-    let userAnswerDisplay = '';
 
-    if (question.visible) {
-        // Check option selection
-        isCorrect = selectedOptionAnswer === correctLetter;
-        userAnswerDisplay = selectedOptionAnswer ? `Option ${selectedOptionAnswer}` : 'None';
-    } else {
-        // Check text input
-        const answerInput = document.getElementById('answerInput');
-        const userAnswer = answerInput.value.trim();
-        isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-        userAnswerDisplay = userAnswer;
-    }
-
-    // Hide the locked state, show the content
+    // Hide locked state and show answer
     document.getElementById('answerLocked').style.display = 'none';
     document.getElementById('answerContent').style.display = 'flex';
 
-    // Update result icon
+    // Display the correct answer without judging (host decides outcome)
     const resultIcon = document.getElementById('resultIcon');
-    resultIcon.textContent = isCorrect ? '✓' : '✗';
-    resultIcon.className = `result-icon ${isCorrect ? 'correct' : 'incorrect'}`;
+    resultIcon.textContent = '🎉';
+    resultIcon.className = 'result-icon';
 
-    // Update result text
     const resultText = document.getElementById('resultText');
-    resultText.textContent = isCorrect ? 'Correct!' : 'Incorrect!';
-    resultText.className = `result-text ${isCorrect ? 'correct' : 'incorrect'}`;
+    resultText.textContent = 'Answer Revealed';
+    resultText.className = 'result-text';
 
-    // Show the correct answer
     const correctAnswerDisplay = document.getElementById('correctAnswerDisplay');
     correctAnswerDisplay.innerHTML = `Answer: <strong>${correctAnswer}</strong>`;
 
-    // Mark box as revealed
     document.getElementById('answerRevealBox').classList.add('revealed');
     answerRevealed = true;
 
-    if (isCorrect) {
-        showToast('Correct!', 'Great answer!', 'success');
-    } else {
-        showToast('Incorrect!', `The correct answer was: ${correctAnswer}`, 'error');
-    }
+    showToast('Answer Revealed', `The correct answer is now visible on the card`, 'info');
 
-    // Check if both are revealed
-    checkBothRevealed();
+    // If reward already revealed, show submit controls
+    if (rewardRevealed) {
+        const rewardRow = document.getElementById('rewardEntryRow');
+        if (rewardRow) rewardRow.style.display = 'flex';
+    }
 }
 
 function revealRewardOnCard() {
@@ -719,8 +853,15 @@ function revealRewardOnCard() {
 
     showToast('Reward Revealed!', `Secret reward is ${formatCurrency(question.reward)}`, 'info');
 
-    // Check if both are revealed
-    checkBothRevealed();
+    // Show the reward entry controls (allow host to adjust the reward given)
+    const rewardRow = document.getElementById('rewardEntryRow');
+    if (rewardRow) {
+        rewardRow.style.display = 'flex';
+        const rewardGiven = document.getElementById('rewardGivenAmount');
+        if (rewardGiven) rewardGiven.value = question.reward;
+    }
+
+    if (answerRevealed) checkBothRevealed();
 }
 
 function checkBothRevealed() {
@@ -731,56 +872,8 @@ function checkBothRevealed() {
 }
 
 function goToNextQuestion() {
-    const question = quizQuestions[currentQuestionIndex];
-    const correctAnswer = question.options[question.correct];
-    const correctLetter = ['A', 'B', 'C', 'D'][question.correct];
-    let isCorrect = false;
-
-    if (question.visible) {
-        // Check option selection
-        isCorrect = selectedOptionAnswer === correctLetter;
-    } else {
-        // Check text input
-        const answerInput = document.getElementById('answerInput');
-        const userAnswer = answerInput.value.trim();
-        isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-    }
-
-    // Deduct bid from participant's purse
-    bidWinner.purse -= bidAmount;
-
-    if (isCorrect) {
-        bidWinner.rewards += question.reward;
-        showToast('Reward Added! 🎉',
-            `${bidWinner.name} wins ${formatCurrency(question.reward)}!`,
-            'success');
-    } else {
-        showToast('Bid Deducted! ❌',
-            `${bidWinner.name} loses ${formatCurrency(bidAmount)}`,
-            'error');
-    }
-
-    totalQuestionsAnswered++;
-
-    // Re-enable controls for next question
-    document.getElementById('bidWinner').disabled = false;
-    document.getElementById('winnerBidAmount').disabled = false;
-    document.getElementById('answerInput').disabled = false;
-    document.getElementById('submitAnswerBtn').style.display = 'flex';
-    document.getElementById('skipQuestionBtn').style.display = 'flex';
-
-    // Re-enable option buttons
-    const optionBtns = document.querySelectorAll('.option-btn');
-    optionBtns.forEach(btn => btn.disabled = false);
-
-    // Reset reveal states
-    answerRevealed = false;
-    rewardRevealed = false;
-
-    // Show leaderboard after every question
-    switchView('leaderboardView');
-    updateLeaderboard();
-    saveGameState();
+    // For compatibility the card continue will submit the result
+    submitResult();
 }
 
 function nextQuestion() {
@@ -789,11 +882,7 @@ function nextQuestion() {
     // Re-enable controls
     document.getElementById('bidWinner').disabled = false;
     document.getElementById('winnerBidAmount').disabled = false;
-    document.getElementById('answerInput').disabled = false;
-
-    // Reset button states
-    document.getElementById('submitAnswerBtn').style.display = 'flex';
-    document.getElementById('skipQuestionBtn').style.display = 'flex';
+    // answer input and old submit/skip buttons no longer exist
 
     // Re-enable option buttons
     const optionBtns = document.querySelectorAll('.option-btn');
@@ -810,6 +899,64 @@ function nextQuestion() {
 
     switchView('quizView');
     loadQuestion();
+}
+
+function submitResult() {
+    // Validate bid winner
+    if (!bidWinner) {
+        showToast('No Winner', 'Please select the bid winner', 'error');
+        return;
+    }
+
+    // Validate bid amount
+    const bidAmountInput = document.getElementById('winnerBidAmount');
+    bidAmount = parseInt(bidAmountInput.value);
+    if (!bidAmount || bidAmount <= 0) {
+        showToast('Invalid Bid', 'Please enter a valid bid amount', 'error');
+        return;
+    }
+    if (bidAmount > bidWinner.purse) {
+        showToast('Insufficient Funds', `${bidWinner.name} only has ${formatCurrency(bidWinner.purse)}`, 'error');
+        return;
+    }
+
+    // Get reward given (host may adjust)
+    const rewardGivenInput = document.getElementById('rewardGivenAmount');
+    const rewardGiven = rewardGivenInput ? parseInt(rewardGivenInput.value) || 0 : 0;
+
+    // Apply bid deduction
+    bidWinner.purse -= bidAmount;
+
+    if (rewardGiven > 0) {
+        bidWinner.rewards += rewardGiven;
+        showToast('Reward Added! 🎉', `${bidWinner.name} receives ${formatCurrency(rewardGiven)}`, 'success');
+    } else {
+        showToast('Bid Deducted! ❌', `${bidWinner.name} loses ${formatCurrency(bidAmount)}`, 'error');
+    }
+
+    totalQuestionsAnswered++;
+
+    // Reset controls
+    document.getElementById('bidWinner').disabled = false;
+    document.getElementById('winnerBidAmount').disabled = false;
+    const rewardRow = document.getElementById('rewardEntryRow');
+    if (rewardRow) rewardRow.style.display = 'none';
+    if (rewardGivenInput) rewardGivenInput.value = '';
+    document.getElementById('winnerBidAmount').value = '';
+    document.getElementById('winnerPurse').innerHTML = '';
+
+    // Reset reveal/buttons
+    answerRevealed = false;
+    rewardRevealed = false;
+    const card = document.getElementById('flipCard');
+    if (card) card.classList.remove('flipped');
+    cardFlipped = false;
+    document.getElementById('cardContinueBtn').style.display = 'none';
+
+    // Show leaderboard with updated scores; host can click Next Question to continue
+    switchView('leaderboardView');
+    updateLeaderboard();
+    saveGameState();
 }
 
 function endQuiz() {

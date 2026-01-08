@@ -165,7 +165,7 @@
 
                                 <!-- Next Question Button (shown after both reveals) -->
                                 <div class="card-continue" id="cardContinueBtn" style="display: none;">
-                                    <button class="btn btn-success btn-large" onclick="goToNextQuestion()"
+                                    <button class="btn btn-success btn-large" onclick="submitResult()"
                                         id="nextQuestionCardBtn">
                                         <span class="btn-icon">➡️</span>
                                         Next Question
@@ -198,58 +198,23 @@
                             </div>
                         </div>
                         <div class="winner-purse" id="winnerPurse"></div>
+                        <div class="form-row" id="rewardEntryRow" style="display: none; margin-top:10px;">
+                            <div class="form-group">
+                                <label for="rewardGivenAmount">Reward Given (optional)</label>
+                                <input type="number" id="rewardGivenAmount" placeholder="Enter reward amount" min="0" step="10">
+                            </div>
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-success" id="submitResultBtn" onclick="submitResult()">
+                                    <span class="btn-icon">✓</span>
+                                    Submit Result
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Answer Section -->
-                <div class="answer-section">
-                    <h3 class="section-subtitle">
-                        <span class="icon">✍️</span>
-                        Enter Answer
-                    </h3>
-
-                    <!-- Text Input for Non-Visible Options -->
-                    <div class="text-answer-input" id="textAnswerInput">
-                        <div class="form-group">
-                            <label for="answerInput">Winner's Answer</label>
-                            <input type="text" id="answerInput" placeholder="Type the answer here..."
-                                autocomplete="off">
-                        </div>
-                    </div>
-
-                    <!-- Option Buttons for Visible Options -->
-                    <div class="option-answer-input" id="optionAnswerInput" style="display: none;">
-                        <label class="option-select-label">Select Answer Option</label>
-                        <div class="option-buttons-grid">
-                            <button class="option-btn" data-option="A" onclick="selectOptionAnswer('A')">
-                                <span class="option-btn-letter">A</span>
-                            </button>
-                            <button class="option-btn" data-option="B" onclick="selectOptionAnswer('B')">
-                                <span class="option-btn-letter">B</span>
-                            </button>
-                            <button class="option-btn" data-option="C" onclick="selectOptionAnswer('C')">
-                                <span class="option-btn-letter">C</span>
-                            </button>
-                            <button class="option-btn" data-option="D" onclick="selectOptionAnswer('D')">
-                                <span class="option-btn-letter">D</span>
-                            </button>
-                        </div>
-                        <div class="selected-option-display" id="selectedOptionDisplay">
-                            No option selected
-                        </div>
-                    </div>
-
-                    <div class="answer-buttons">
-                        <button class="btn btn-success btn-large" onclick="submitAnswer()" id="submitAnswerBtn">
-                            <span class="btn-icon">✓</span>
-                            Submit Answer
-                        </button>
-                        <button class="btn btn-warning btn-skip" onclick="skipQuestion()" id="skipQuestionBtn">
-                            <span class="btn-icon">⏭️</span>
-                            Skip Question
-                        </button>
-                    </div>
-                </div>
+                <!-- NOTE: Answer entry removed per new flow. Host will flip card, reveal answer/reward, then enter winner/bid/reward and submit result. -->
             </div>
         </section>
 
